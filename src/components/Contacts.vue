@@ -26,7 +26,10 @@
                     <tr>
                         <td>{{contact.name}}</td>
                         <td>{{contact.email}}</td>
-                        <td><button v-on:click="editContact(contact)" v-if="!edit" type="button" class="btn btn-warning">Изменить</button></td>
+                        <td>
+                            <button v-on:click="editContact(contact)" v-if="!edit" type="button" class="btn btn-warning">Изменить</button>
+                            <button v-on:click="deleteContact(contact)" v-if="!edit" type="button" class="btn btn-danger">Удалить</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -79,6 +82,15 @@ export default {
         'email': ''
       }
       this.newcontact = obj
+    },
+    deleteContact: function (obj) {
+      var eq = function (input) {
+        return input.name === obj.name && input.email === obj.email
+      }
+      var index = this.contacts.findIndex(eq)
+      if (index > -1) {
+        this.contacts.splice(index, 1)
+      }
     }
   }
 }
