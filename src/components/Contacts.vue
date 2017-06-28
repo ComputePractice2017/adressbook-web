@@ -10,23 +10,23 @@
                     <input type="email" v-model="newcontact.email"  class="form-control" id="inlineFormInputGroup" placeholder="Email">
                 </div>
       
-                <button v-on:click="addNewContact" class="btn btn-primary">Добавить</button>
+                <button v-on:click="addNewContact" v-if="!edit" type="button" class="btn btn-primary">Добавить</button>
+                <button v-on:click="endEdit" v-if="edit" type="button" class="btn btn-danger">Сохранить</button>
             </form>
-
-            {{ newcontact }}
-
 
             <table class="table">
                 <thead>
                     <tr>
                         <th>Имя</th>
                         <th>Email</th>
+                        <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="contact in contacts">
+                <tbody v-for="contact in contacts">
+                    <tr>
                         <td>{{contact.name}}</td>
                         <td>{{contact.email}}</td>
+                        <td><button v-on:click="editContact(contact)" v-if="!edit" type="button" class="btn btn-warning">Изменить</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -51,6 +51,7 @@ export default {
           'email': 'bob@company.org'
         }
       ],
+      edit: false,
       newcontact: {
         'name': '',
         'email': ''
@@ -66,6 +67,18 @@ export default {
       obj.name = this.newcontact.name
       obj.email = this.newcontact.email
       this.contacts.push(obj)
+    },
+    editContact: function (obj) {
+      this.edit = true
+      this.newcontact = obj
+    },
+    endEdit: function () {
+      this.edit = false
+      var obj = {
+        'name': '',
+        'email': ''
+      }
+      this.newcontact = obj
     }
   }
 }
