@@ -3,17 +3,17 @@
         <div class="container">
             <form class="form-inline">
                 <label class="sr-only" for="inlineFormInput">Name</label>
-                <input type="text" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Имя">
+                <input type="text" v-model="newcontact.name" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Имя">
     
                 <label class="sr-only" for="inlineFormInputGroup">Username</label>
                 <div class="input-group mb-2 mr-sm-2 mb-sm-0">
-                    <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Email">
+                    <input type="email" v-model="newcontact.email"  class="form-control" id="inlineFormInputGroup" placeholder="Email">
                 </div>
       
-                <button type="submit" class="btn btn-primary">Добавить</button>
+                <button v-on:click="addNewContact" class="btn btn-primary">Добавить</button>
             </form>
 
-
+            {{ newcontact }}
 
 
             <table class="table">
@@ -50,7 +50,22 @@ export default {
           'name': 'Bob',
           'email': 'bob@company.org'
         }
-      ]
+      ],
+      newcontact: {
+        'name': '',
+        'email': ''
+      }
+    }
+  },
+  methods: {
+    addNewContact: function () {
+      var obj = {
+        'name': '',
+        'email': ''
+      }
+      obj.name = this.newcontact.name
+      obj.email = this.newcontact.email
+      this.contacts.push(obj)
     }
   }
 }
