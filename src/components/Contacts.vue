@@ -1,6 +1,30 @@
 <template>
     <div class="contacts">
         <div class="container">
+            <form class="form">
+                <input class="form-control" type="text" placeholder="Поиск" id="example-text-input" v-model="search">
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody v-for="contact in contactList">
+                    <tr>
+                        <td>{{contact.name}}</td>
+                        <td>{{contact.email}}</td>
+                        <td>
+                            <button v-on:click="editContact(contact)" v-if="!edit" type="button" class="btn btn-warning">Изменить</button>
+                            <button v-on:click="deleteContact(contact)" v-if="!edit" type="button" class="btn btn-danger">Удалить</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
             <form class="form-inline">
                 <label class="sr-only" for="inlineFormInput">Name</label>
                 <input type="text" v-model="newcontact.name" class="form-control mb-2 mr-sm-2 mb-sm-0" id="inlineFormInput" placeholder="Имя">
@@ -13,26 +37,6 @@
                 <button v-on:click="addNewContact" v-if="!edit" type="button" class="btn btn-primary">Добавить</button>
                 <button v-on:click="endEdit" v-if="edit" type="button" class="btn btn-danger">Сохранить</button>
             </form>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Имя</th>
-                        <th>Email</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody v-for="contact in contacts">
-                    <tr>
-                        <td>{{contact.name}}</td>
-                        <td>{{contact.email}}</td>
-                        <td>
-                            <button v-on:click="editContact(contact)" v-if="!edit" type="button" class="btn btn-warning">Изменить</button>
-                            <button v-on:click="deleteContact(contact)" v-if="!edit" type="button" class="btn btn-danger">Удалить</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
         </div>  
     </div>
 </template>
@@ -58,7 +62,20 @@ export default {
       newcontact: {
         'name': '',
         'email': ''
+      },
+      search: ''
+    }
+  },
+  computed: {
+    contactList: function () {
+      var search = this.search
+      var filterFn = function (item) {
+        return item.name.includes(search) || item.email.includes(search)
       }
+      if (this.search !== '') {
+        return this.contacts.filter(filterFn)
+      }
+      return this.contacts
     }
   },
   methods: {
@@ -97,7 +114,7 @@ export default {
 </script>
 
 <style>
-.form-inline {
+.form {
     margin-top: 20px;
     margin-bottom: 20px;
 }
