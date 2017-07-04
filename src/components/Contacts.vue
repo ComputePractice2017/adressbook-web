@@ -76,6 +76,10 @@ export default {
   },
   methods: {
     addNewContact: function () {
+      alert('mounted')
+      if (this.contacts === null) {
+        this.contacts = []
+      }
       var obj = {
         'name': '',
         'email': ''
