@@ -4,7 +4,6 @@
             <form class="form">
                 <input class="form-control" type="text" placeholder="Поиск" id="example-text-input" v-model="search">
             </form>
-
             <table class="table">
                 <thead>
                     <tr>
@@ -13,8 +12,8 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody v-for="contact in contactList">
-                    <tr>
+                <tbody>
+                    <tr v-for="contact in contacts">
                         <td>{{contact.name}}</td>
                         <td>{{contact.email}}</td>
                         <td>
@@ -46,18 +45,7 @@ export default {
   name: 'hello',
   data () {
     return {
-      contacts: [
-        {
-          'id': 1,
-          'name': 'Alice',
-          'email': 'alice@company.org'
-        },
-        {
-          'id': 2,
-          'name': 'Bob',
-          'email': 'bob@company.org'
-        }
-      ],
+      contacts: null,
       edit: false,
       newcontact: {
         'name': '',
@@ -77,6 +65,14 @@ export default {
       }
       return this.contacts
     }
+  },
+  mounted: function () {
+    this.$http.get('/persons').then(response => {
+      this.contacts = response.body
+      console.log(this.contacts)
+    }, response => {
+      console.log(response)
+    })
   },
   methods: {
     addNewContact: function () {
