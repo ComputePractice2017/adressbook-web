@@ -13,7 +13,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="contact in contacts">
+                    <tr v-for="contact in contactList">
                         <td>{{contact.name}}</td>
                         <td>{{contact.email}}</td>
                         <td>
@@ -83,12 +83,24 @@ export default {
       obj.name = this.newcontact.name
       obj.email = this.newcontact.email
       this.contacts.push(obj)
+
+      this.$http.post('/persons', obj).then(response => {
+        console.log(this.response)
+      }, response => {
+        console.log(response)
+      })
     },
     editContact: function (obj) {
       this.edit = true
       this.newcontact = obj
     },
     endEdit: function () {
+      this.$http.put('/persons/' + this.newcontact.id, this.newcontact).then(response => {
+        console.log(this.response)
+      }, response => {
+        console.log(response)
+      })
+
       this.edit = false
       var obj = {
         'name': '',
@@ -97,6 +109,12 @@ export default {
       this.newcontact = obj
     },
     deleteContact: function (obj) {
+      this.$http.delete('/persons/' + obj.id).then(response => {
+        console.log(this.response)
+      }, response => {
+        console.log(response)
+      })
+
       var eq = function (input) {
         return input.name === obj.name && input.email === obj.email
       }
