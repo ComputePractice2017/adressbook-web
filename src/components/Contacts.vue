@@ -4,7 +4,6 @@
             <form class="form">
                 <input class="form-control" type="text" placeholder="Поиск" id="example-text-input" v-model="search">
             </form>
-
             <table class="table">
                 <thead>
                     <tr>
@@ -13,8 +12,8 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody v-for="contact in contactList">
-                    <tr>
+                <tbody>
+                    <tr v-for="contact in contactList">
                         <td>{{contact.name}}</td>
                         <td>{{contact.email}}</td>
                         <td>
@@ -46,18 +45,7 @@ export default {
   name: 'hello',
   data () {
     return {
-      contacts: [
-        {
-          'id': 1,
-          'name': 'Alice',
-          'email': 'alice@company.org'
-        },
-        {
-          'id': 2,
-          'name': 'Bob',
-          'email': 'bob@company.org'
-        }
-      ],
+      contacts: null,
       edit: false,
       newcontact: {
         'name': '',
@@ -78,6 +66,14 @@ export default {
       return this.contacts
     }
   },
+  mounted: function () {
+    this.$http.get('/persons').then(response => {
+      this.contacts = response.body
+      console.log(this.contacts)
+    }, response => {
+      console.log(response)
+    })
+  },
   methods: {
     addNewContact: function () {
       var obj = {
@@ -87,12 +83,24 @@ export default {
       obj.name = this.newcontact.name
       obj.email = this.newcontact.email
       this.contacts.push(obj)
+
+      this.$http.post('/persons', obj).then(response => {
+        console.log(this.response)
+      }, response => {
+        console.log(response)
+      })
     },
     editContact: function (obj) {
       this.edit = true
       this.newcontact = obj
     },
     endEdit: function () {
+      this.$http.put('/persons/' + this.newcontact.id, this.newcontact).then(response => {
+        console.log(this.response)
+      }, response => {
+        console.log(response)
+      })
+
       this.edit = false
       var obj = {
         'name': '',
@@ -101,6 +109,12 @@ export default {
       this.newcontact = obj
     },
     deleteContact: function (obj) {
+      this.$http.delete('/persons/' + obj.id).then(response => {
+        console.log(this.response)
+      }, response => {
+        console.log(response)
+      })
+
       var eq = function (input) {
         return input.name === obj.name && input.email === obj.email
       }
